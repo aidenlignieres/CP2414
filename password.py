@@ -1,6 +1,7 @@
 import hashlib
 import random
 import string
+import secrets
 
 
 def generate_password(min_length=8, max_length=20, include_uppercase=True, include_lowercase=True, include_numbers=True,
@@ -28,9 +29,18 @@ def generate_password(min_length=8, max_length=20, include_uppercase=True, inclu
 
 def create_user(username, password):
     """Create a new user with the given username and hashed password."""
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+    salt = secrets.token_hex(16)
+    password_with_salt = password + salt
+    hashed_password = hashlib.sha256(password_with_salt.encode()).hexdigest()
     with open('users.txt', 'a') as file:
-        file.write(f"{username}:{hashed_password}\n")
+        file.write(f"{username}:{salt}:{hashed_password}\n")
+
+
+def verify_password(password, salt, hashed_password):
+    """Verify that the given password matches the given salt and hashed password."""
+    password_with_salt = password + salt
+    hashed_password_to_check = hashlib.sha256(password_with_salt.encode()).hexdigest()
+    return hashed_password_to_check == hashed_password
 
 
 def main():
