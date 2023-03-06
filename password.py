@@ -45,6 +45,8 @@ def verify_password(password, salt, hashed_password):
 
 def main():
     """Main function to run the program."""
+    print("Login or Create User")
+
     print("Welcome to the user creation program!")
     print("Please enter a username and password to create a new user.")
     username = input("Username: ")
@@ -71,6 +73,18 @@ def main():
     create_user(username, user_password)
     print(f"User '{username}' has been created with the password '{user_password}'.")
 
+
+def caesar_cipher(password):
+    step = int(input("Step: "))
+    temp = ""
+    for i in password:
+        j = ord(i)
+        k = (j + step) % 127
+        if 32 < k < 127:
+            temp += chr(k)
+        else:
+            temp += chr(k + 32)
+    print(temp)
 
 if __name__ == '__main__':
     main()
