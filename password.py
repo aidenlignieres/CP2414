@@ -50,6 +50,19 @@ def verify_password(username, password):
                 return hashed_password_to_check == hashed_password
     return False
 
+def password_check(password):
+    while True:
+        user_password = password
+        if (8 <= len(user_password) <= 20 and
+                any(c.isupper() for c in user_password) and
+                any(c.islower() for c in user_password) and
+                any(c.isdigit() for c in user_password) and
+                any(c in string.punctuation for c in user_password)):
+            return True
+        else:
+            return False
+            # break
+
 def create_account():
     """Create a new account with a user-specified username and password."""
     print("Creating a new account...")
@@ -60,12 +73,17 @@ def create_account():
             password = generate_password()
             print(f"Generated password: {password}")
         elif password != '':
-            if verify_password(username, password) == False:
-                create_user(username, password)
-                print(f"Account created for {username}")
-                break
+            if password_check(password) == True:
+                if verify_password(username, password) == False:
+                    create_user(username, password)
+                    print(f"Account created for {username}")
+                    break
+                elif verify_password(username, password) == True:
+                    print("This username is already taken. Please choose a different one.")
+                    break
             else:
-                print("This username is already taken. Please choose a different one.")
+                print(
+                    "Password must be 8-20 characters and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.")
 
 
 def login():
