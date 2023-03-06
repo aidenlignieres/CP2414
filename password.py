@@ -70,13 +70,15 @@ def main():
         else:
             break
 
-    create_user(username, user_password)
+    # create_user(username, user_password)
+    caesar_cipher(username, user_password)
     print(f"User '{username}' has been created with the password '{user_password}'.")
 
 
-def caesar_cipher(password):
+def caesar_cipher(username, password):
     step = int(input("Step: "))
     temp = ""
+    key = ""
     for i in password:
         j = ord(i)
         k = (j + step) % 127
@@ -84,7 +86,21 @@ def caesar_cipher(password):
             temp += chr(k)
         else:
             temp += chr(k + 32)
-    print(temp)
+    for i in str(step):
+        j = ord(i)
+        k = (j + 3) % 127
+        if 32 < k < 127:
+            key += chr(k)
+        else:
+            key += chr(k + 32)
+    with open('users.txt', 'a') as file:
+        file.write(f"{key}{username}{temp}")
+
+
+
+def caesar_cipher_decoder(temp):
+
+
 
 if __name__ == '__main__':
     main()
