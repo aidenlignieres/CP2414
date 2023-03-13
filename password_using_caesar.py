@@ -2,6 +2,7 @@ import hashlib
 import random
 import string
 import secrets
+import csv
 
 
 def generate_password(min_length=8, max_length=20, include_uppercase=True, include_lowercase=True, include_numbers=True,
@@ -93,14 +94,44 @@ def caesar_cipher(username, password):
             key += chr(k)
         else:
             key += chr(k + 32)
-    with open('users.txt', 'a') as file:
-        file.write(f"{key}{username}{temp}")
+    with open('users.csv', 'a') as file:
+        file.write(f"{username},{key},{temp}\n")
 
 
+def caesar_cipher_decoder(username, password):
+    step = ''
+    temp = ''
+    with open('users.csv', 'r') as file:
+        for line in file:
+            user = line.strip().split(",")
+            if username == user[0]:
+                user = line.strip().split(",")
+                break
+    for i in str(user[1]):
+        j = ord(i)
+        k = (j - 3) % 127
+        if 32 < k < 127:
+            step += chr(k)
+        else:
+            step += chr(k - 32)
+    temp = ""
+    key = ""
+    for i in password:
+        j = ord(i)
+        k = (j + int(step)) % 127
+        if 32 < k < 127:
+            temp += chr(k)
+        else:
+            temp += chr(k + 32)
+    if temp == password:
+        return "yes"
+    else:
+        return "no"
 
-def caesar_cipher_decoder(temp):
 
-
-
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
+username = input()
+password = input()
+caesar_cipher(username, password)
+print(caesar_cipher_decoder(username, password))
